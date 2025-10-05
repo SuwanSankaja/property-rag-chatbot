@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'IAM Role for RAG Chatbot Lambda Functions'
+
+Parameters:
+  SourceBucketName:
+    Type: String
+    Description: S3 bucket name for source listings
+    Default: rag-source-listings
+  
+  IntentsBucketName:
+    Type: String
+    Description: S3 bucket name for user intents
+    Default: rag-user-intents
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: PropertyRAGLambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: BedrockAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                  - bedrock:InvokeModelWithResponseStream
+                Resource:
+                  - arn:aws:bedrock:*::foundation-model/amazon.titan-embed-text-v2:0
+                  - arn:aws:bedrock:*::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0
+        
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:ListBucket
+                Resource:
+                  - !Sub 'arn:aws:s3:::${SourceBucketName}'
+                  - !Sub 'arn:aws:s3:::${SourceBucketName}/*'
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                Resource:
+                  - !Sub 'arn:aws:s3:::${IntentsBucketName}/*'
+        
+        - PolicyName: OpenSearchServerlessAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - aoss:APIAccessAll
+                Resource:
+                  - !Sub 'arn:aws:aoss:${AWS::Region}:${AWS::AccountId}:collection/*'
+
+Outputs:
+  LambdaRoleArn:
+    Description: ARN of the Lambda execution role
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: PropertyRAGLambdaRoleArn

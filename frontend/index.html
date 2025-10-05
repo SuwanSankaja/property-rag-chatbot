@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Assistant - AI-Powered Real Estate Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">🏠</div>
+                <div class="header-text">
+                    <h1>Property Assistant</h1>
+                    <p>AI-Powered Dubai Real Estate Search</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="propertyCount">19</div>
+                    <div>Properties</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="queryCount">0</div>
+                    <div>Searches</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-message">
+                <div class="welcome-icon">🏡</div>
+                <h2>Welcome! How can I help you find a property today?</h2>
+                <p>Search through 19 Dubai properties using natural language</p>
+                <div class="suggestions">
+                    <div class="suggestion-chip" onclick="sendSuggestion('Show me 1 bedroom apartments in Dubai')">
+                        1 bedroom apartments
+                    </div>
+                    <div class="suggestion-chip" onclick="sendSuggestion('Find properties under 100,000 AED')">
+                        Affordable properties
+                    </div>
+                    <div class="suggestion-chip" onclick="sendSuggestion('Show me luxury apartments')">
+                        Luxury apartments
+                    </div>
+                    <div class="suggestion-chip" onclick="sendSuggestion('Properties for rent in Dubai')">
+                        Rentals
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input 
+                type="text" 
+                id="userInput" 
+                placeholder="Ask about properties, locations, prices..." 
+                onkeypress="handleKeyPress(event)"
+            >
+            <button id="sendBtn" onclick="sendMessage()">Send</button>
+        </div>
+
+        <div class="powered-by">
+            Powered by <strong>AWS Bedrock</strong> • OpenSearch • Claude AI
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
