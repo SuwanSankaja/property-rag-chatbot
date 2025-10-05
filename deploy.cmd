@@ -1,14 +1,14 @@
 @echo off
 echo Deploying Query Lambda...
-cd backend\lambda
+cd backend\lamda
 
-del ..\..\query-lambda.zip 2>nul
-rmdir /s /q ..\..\query-lambda 2>nul
+del query-lambda.zip 2>nul
+rmdir /s /q query-lambda 2>nul
 
-mkdir ..\..\query-lambda
-cd ..\..\query-lambda
+mkdir query-lambda
+cd query-lambda
 pip install opensearch-py requests-aws4auth boto3 -t .
-copy ..\backend\lambda\query_lambda.py lambda_function.py
+copy ..\query_lambda.py lambda_function.py
 powershell Compress-Archive -Path * -DestinationPath ..\query-lambda.zip -Force
 cd ..
 
